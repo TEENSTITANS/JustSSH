@@ -31,15 +31,15 @@ import org.connectbot.bean.PortForwardBean;
 import org.connectbot.data.ColorStorage;
 import org.connectbot.data.HostStorage;
 
+import com.trilead.ssh2.KnownHosts;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
-
-import com.trilead.ssh2.KnownHosts;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Contains information about various SSH hosts, include public hostkey if known
@@ -58,6 +58,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper implements HostStorage,
 	public final static String FIELD_HOST_NICKNAME = "nickname";
 	public final static String FIELD_HOST_PROTOCOL = "protocol";
 	public final static String FIELD_HOST_USERNAME = "username";
+	public final static String FIELD_HOST_PASSWORD = "password";
 	public final static String FIELD_HOST_HOSTNAME = "hostname";
 	public final static String FIELD_HOST_PORT = "port";
 	public final static String FIELD_HOST_LASTCONNECT = "lastconnect";
@@ -128,6 +129,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper implements HostStorage,
 			+ FIELD_HOST_NICKNAME + " TEXT, "
 			+ FIELD_HOST_PROTOCOL + " TEXT DEFAULT 'ssh', "
 			+ FIELD_HOST_USERNAME + " TEXT, "
+			+ FIELD_HOST_PASSWORD + " TEXT, "
 			+ FIELD_HOST_HOSTNAME + " TEXT, "
 			+ FIELD_HOST_PORT + " INTEGER, "
 			+ FIELD_HOST_LASTCONNECT + " INTEGER, "
@@ -378,6 +380,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper implements HostStorage,
 					+ FIELD_HOST_NICKNAME + ", "
 					+ FIELD_HOST_PROTOCOL + ", "
 					+ FIELD_HOST_USERNAME + ", "
+					+ FIELD_HOST_PASSWORD + ", "
 					+ FIELD_HOST_HOSTNAME + ", "
 					+ FIELD_HOST_PORT + ", "
 					+ FIELD_HOST_LASTCONNECT + ", "
@@ -492,6 +495,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper implements HostStorage,
 			COL_NICKNAME = c.getColumnIndexOrThrow(FIELD_HOST_NICKNAME),
 			COL_PROTOCOL = c.getColumnIndexOrThrow(FIELD_HOST_PROTOCOL),
 			COL_USERNAME = c.getColumnIndexOrThrow(FIELD_HOST_USERNAME),
+			COL_PASSWORD = c.getColumnIndexOrThrow(FIELD_HOST_PASSWORD),
 			COL_HOSTNAME = c.getColumnIndexOrThrow(FIELD_HOST_HOSTNAME),
 			COL_PORT = c.getColumnIndexOrThrow(FIELD_HOST_PORT),
 			COL_LASTCONNECT = c.getColumnIndexOrThrow(FIELD_HOST_LASTCONNECT),
@@ -515,6 +519,7 @@ public class HostDatabase extends RobustSQLiteOpenHelper implements HostStorage,
 			host.setNickname(c.getString(COL_NICKNAME));
 			host.setProtocol(c.getString(COL_PROTOCOL));
 			host.setUsername(c.getString(COL_USERNAME));
+			host.setPassword(c.getString(COL_PASSWORD));
 			host.setHostname(c.getString(COL_HOSTNAME));
 			host.setPort(c.getInt(COL_PORT));
 			host.setLastConnect(c.getLong(COL_LASTCONNECT));

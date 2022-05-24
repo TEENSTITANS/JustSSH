@@ -30,11 +30,11 @@ import org.connectbot.service.TerminalManager;
 import org.connectbot.util.PreferenceConstants;
 import org.connectbot.util.TerminalViewPager;
 
-import android.annotation.SuppressLint;
+import com.google.android.material.tabs.TabLayout;
+
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -48,14 +48,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -86,6 +78,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.viewpager.widget.PagerAdapter;
 import de.mud.terminal.vt320;
 
 public class ConsoleActivity extends AppCompatActivity implements BridgeDisconnectedListener {
@@ -135,7 +134,7 @@ public class ConsoleActivity extends AppCompatActivity implements BridgeDisconne
 	private MenuItem disconnect;
 	private MenuItem paste;
 	private MenuItem portForward;
-	private MenuItem resize;
+//	private MenuItem resize;
 	private MenuItem urlscan;
 
 	private boolean forcedOrientation;
@@ -415,7 +414,7 @@ public class ConsoleActivity extends AppCompatActivity implements BridgeDisconne
 		disconnect.setOnMenuItemClickListener(null);
 		paste.setOnMenuItemClickListener(null);
 		portForward.setOnMenuItemClickListener(null);
-		resize.setOnMenuItemClickListener(null);
+//		resize.setOnMenuItemClickListener(null);
 		urlscan.setOnMenuItemClickListener(null);
 	}
 
@@ -915,6 +914,7 @@ public class ConsoleActivity extends AppCompatActivity implements BridgeDisconne
 			}
 		});
 
+		/**
 		resize = menu.add(R.string.console_menu_resize);
 		if (hardKeyboard)
 			resize.setAlphabeticShortcut('s');
@@ -954,6 +954,7 @@ public class ConsoleActivity extends AppCompatActivity implements BridgeDisconne
 				return true;
 			}
 		});
+		*/
 
 		return true;
 	}
@@ -986,7 +987,7 @@ public class ConsoleActivity extends AppCompatActivity implements BridgeDisconne
 		paste.setEnabled(activeTerminal);
 		portForward.setEnabled(sessionOpen && canForwardPorts);
 		urlscan.setEnabled(activeTerminal);
-		resize.setEnabled(sessionOpen);
+//		resize.setEnabled(sessionOpen);
 
 		return true;
 	}

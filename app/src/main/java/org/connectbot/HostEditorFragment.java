@@ -20,15 +20,21 @@ package org.connectbot;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.connectbot.bean.HostBean;
+import org.connectbot.transport.SSH;
+import org.connectbot.transport.Telnet;
+import org.connectbot.transport.TransportFactory;
+import org.connectbot.util.HostDatabase;
+import org.connectbot.views.CheckableMenuItem;
+
+import com.google.android.material.textfield.TextInputLayout;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -40,13 +46,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import org.connectbot.bean.HostBean;
-import org.connectbot.transport.SSH;
-import org.connectbot.transport.Telnet;
-import org.connectbot.transport.TransportFactory;
-import org.connectbot.util.HostDatabase;
-import org.connectbot.views.CheckableMenuItem;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.Fragment;
 
 public class HostEditorFragment extends Fragment {
 
@@ -107,6 +108,8 @@ public class HostEditorFragment extends Fragment {
 	private EditText mHostnameField;
 	private View mPortContainer;
 	private EditText mPortField;
+	private View mPasswordItem;
+	private EditText mPasswordField;
 	private View mNicknameItem;
 	private EditText mNicknameField;
 	private View mColorItem;
@@ -247,9 +250,15 @@ public class HostEditorFragment extends Fragment {
 		mPortField.setText(Integer.toString(mHost.getPort()));
 		mPortField.addTextChangedListener(new HostTextFieldWatcher(HostDatabase.FIELD_HOST_PORT));
 
+		mPasswordItem = view.findViewById(R.id.password_item);
 		mNicknameItem = view.findViewById(R.id.nickname_item);
 
 		setTransportType(mHost.getProtocol(), /* setDefaultPortInModel */ false);
+
+		mPasswordField = view.findViewById(R.id.password_field);
+		mPasswordField.setText(mHost.getPassword());
+		mPasswordField.addTextChangedListener(
+				new HostTextFieldWatcher(HostDatabase.FIELD_HOST_PASSWORD));
 
 		mNicknameField = view.findViewById(R.id.nickname_field);
 		mNicknameField.setText(mHost.getNickname());
@@ -716,6 +725,8 @@ public class HostEditorFragment extends Fragment {
 
 			if (HostDatabase.FIELD_HOST_USERNAME.equals(mFieldType)) {
 				mHost.setUsername(text);
+			} else if (HostDatabase.FIELD_HOST_PASSWORD.equals(mFieldType)) {
+				mHost.setPassword(text);
 			} else if (HostDatabase.FIELD_HOST_HOSTNAME.equals(mFieldType)) {
 				mHost.setHostname(text);
 			} else if (HostDatabase.FIELD_HOST_PORT.equals(mFieldType)) {

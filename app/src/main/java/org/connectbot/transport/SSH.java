@@ -34,8 +34,8 @@ import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -44,9 +44,6 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.trilead.ssh2.crypto.keys.Ed25519PrivateKey;
-import com.trilead.ssh2.crypto.keys.Ed25519PublicKey;
-import com.trilead.ssh2.crypto.keys.Ed25519Provider;
 import org.connectbot.R;
 import org.connectbot.bean.HostBean;
 import org.connectbot.bean.PortForwardBean;
@@ -57,10 +54,6 @@ import org.connectbot.service.TerminalManager.KeyHolder;
 import org.connectbot.util.HostDatabase;
 import org.connectbot.util.PubkeyDatabase;
 import org.connectbot.util.PubkeyUtils;
-
-import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 
 import com.trilead.ssh2.AuthAgentCallback;
 import com.trilead.ssh2.ChannelCondition;
@@ -74,14 +67,20 @@ import com.trilead.ssh2.KnownHosts;
 import com.trilead.ssh2.LocalPortForwarder;
 import com.trilead.ssh2.Session;
 import com.trilead.ssh2.crypto.PEMDecoder;
+import com.trilead.ssh2.crypto.keys.Ed25519PrivateKey;
+import com.trilead.ssh2.crypto.keys.Ed25519Provider;
+import com.trilead.ssh2.crypto.keys.Ed25519PublicKey;
 import com.trilead.ssh2.signature.DSASHA1Verify;
 import com.trilead.ssh2.signature.ECDSASHA2Verify;
 import com.trilead.ssh2.signature.Ed25519Verify;
 import com.trilead.ssh2.signature.RSASHA1Verify;
 
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+
 /**
  * @author Kenny Root
- *
  */
 public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveCallback, AuthAgentCallback {
 	static {
@@ -102,8 +101,8 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 	private static final int DEFAULT_PORT = 22;
 
 	private static final String AUTH_PUBLICKEY = "publickey",
-		AUTH_PASSWORD = "password",
-		AUTH_KEYBOARDINTERACTIVE = "keyboard-interactive";
+			AUTH_PASSWORD = "password",
+			AUTH_KEYBOARDINTERACTIVE = "keyboard-interactive";
 
 	private final static int AUTH_TRIES = 20;
 
@@ -126,9 +125,9 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 	private InputStream stderr;
 
 	private static final int conditions = ChannelCondition.STDOUT_DATA
-		| ChannelCondition.STDERR_DATA
-		| ChannelCondition.CLOSED
-		| ChannelCondition.EOF;
+			| ChannelCondition.STDERR_DATA
+			| ChannelCondition.CLOSED
+			| ChannelCondition.EOF;
 
 	private final List<PortForwardBean> portForwards = new ArrayList<>();
 
@@ -279,9 +278,8 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 
 					if (pubkey == null)
 						bridge.outputLine(manager.res.getString(R.string.terminal_auth_pubkey_invalid));
-					else
-						if (tryPublicKey(pubkey))
-							finishConnection();
+					else if (tryPublicKey(pubkey))
+						finishConnection();
 				}
 
 				pubkeysExhausted = true;
@@ -298,8 +296,11 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 				}
 			} else if (connection.isAuthMethodAvailable(host.getUsername(), AUTH_PASSWORD)) {
 				bridge.outputLine(manager.res.getString(R.string.terminal_auth_pass));
-				String password = bridge.getPromptHelper().requestStringPrompt(null,
-						manager.res.getString(R.string.prompt_password));
+//				String password = bridge.getPromptHelper().requestStringPrompt(null,
+//						manager.res.getString(R.string.prompt_password));
+				String password = host.getPassword();
+				System.out.print("password-->" + password);
+//				String password = "cosmos@2019";
 				if (password != null
 						&& connection.authenticateWithPassword(host.getUsername(), password)) {
 					finishConnection();
@@ -319,6 +320,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 
 	/**
 	 * Attempt connection with given {@code pubkey}.
+	 *
 	 * @return {@code true} for successful authentication
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
@@ -464,7 +466,7 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 			if (connectionInfo.clientToServerCryptoAlgorithm
 					.equals(connectionInfo.serverToClientCryptoAlgorithm)
 					&& connectionInfo.clientToServerMACAlgorithm
-							.equals(connectionInfo.serverToClientMACAlgorithm)) {
+					.equals(connectionInfo.serverToClientMACAlgorithm)) {
 				bridge.outputLine(manager.res.getString(R.string.terminal_using_algorithm,
 						connectionInfo.clientToServerCryptoAlgorithm,
 						connectionInfo.clientToServerMACAlgorithm));
@@ -784,10 +786,10 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(PROTOCOL)
-			.append("://")
-			.append(Uri.encode(matcher.group(1)))
-			.append('@')
-			.append(Uri.encode(matcher.group(2)));
+				.append("://")
+				.append(Uri.encode(matcher.group(1)))
+				.append('@')
+				.append(Uri.encode(matcher.group(2)));
 
 		String portString = matcher.group(6);
 		int port = DEFAULT_PORT;
@@ -804,11 +806,11 @@ public class SSH extends AbsTransport implements ConnectionMonitor, InteractiveC
 
 		if (port != DEFAULT_PORT) {
 			sb.append(':')
-				.append(port);
+					.append(port);
 		}
 
 		sb.append("/#")
-			.append(Uri.encode(input));
+				.append(Uri.encode(input));
 
 		return Uri.parse(sb.toString());
 	}
