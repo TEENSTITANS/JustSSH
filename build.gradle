@@ -9,6 +9,10 @@ buildscript {
 		repositories {
 			google()
 			mavenCentral()
+			 maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
 		}
 	}
 }
@@ -30,11 +34,19 @@ if (MAVEN_REPO_CACHE) {
 			repositories {
 				google()
 				mavenCentral()
+				 maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
 			}
 		}
 		repositories {
 			google()
 			mavenCentral()
+			 maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
 		}
 	}
 }
